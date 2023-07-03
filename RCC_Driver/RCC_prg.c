@@ -56,17 +56,47 @@ void MRCC_vInit(void)
 void MRCC_vEnableClk(u32 A_u32BusID,u32 A_u32PeripheralID)
 {
 
-		switch (A_u32PeripheralID)
-		{
-		case RCC_AHB1:
-
-			break;
-		}
+	switch (A_u32BusID)
+	{
+	case RCC_AHB1:
+		SET_BIT(RCC->AHB1ENR,A_u32PeripheralID);
+		break;
+	case RCC_AHB2:
+		SET_BIT(RCC->AHB2ENR,A_u32PeripheralID);
+		break;
+	case RCC_APB1:
+		SET_BIT(RCC->APB1ENR,A_u32PeripheralID);
+		break;
+	case RCC_APB2:
+		SET_BIT(RCC->APB2ENR,A_u32PeripheralID);
+		break;
+	default:
+		/* "Bus ID out of range" */
+		break;
+	}
 
 
 }
 void MRCC_vDisableClk(u32 A_u32BusID,u32 A_u32PeripheralID)
 {
+	switch (A_u32BusID)
+	{
+	case RCC_AHB1:
+		CLR_BIT(RCC->AHB1ENR,A_u32PeripheralID);
+		break;
+	case RCC_AHB2:
+		CLR_BIT(RCC->AHB2ENR,A_u32PeripheralID);
+		break;
+	case RCC_APB1:
+		CLR_BIT(RCC->APB1ENR,A_u32PeripheralID);
+		break;
+	case RCC_APB2:
+		CLR_BIT(RCC->APB2ENR,A_u32PeripheralID);
+		break;
+	default:
+		/* "Bus ID out of range" */
+		break;
+	}
 
 }
 
