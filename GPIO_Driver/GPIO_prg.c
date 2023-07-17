@@ -168,10 +168,150 @@ void MGPIO_vSetPinVal_Fast(u8 A_u8PortID, u8 A_u8PinNo, u8 A_u8PinVal)
 			}
 		}
 }
+void MGPIO_vSetPortMode(u8 A_u8PortID,u16 A_u16Mode,u8 A_u8PortPortion)
+{
+	if(A_u8PortPortion == GPIO_LOW_PORTION)
+	{
+		switch(A_u8PortID)
+		{
+		case GPIO_PORTA:
+			GPIOA->MODER &= ~(0xFFFF);
+			GPIOA->MODER |= A_u16Mode;
+			break;
+		case GPIO_PORTB:
+			GPIOB->MODER &= ~(0xFFFF);
+			GPIOB->MODER |= A_u16Mode;
+			break;
+		case GPIO_PORTC:
+			GPIOC->MODER &= ~(0xFFFF);
+			GPIOC->MODER |= A_u16Mode;
+			break;
+		}
+	}else if(A_u8PortPortion == GPIO_HIGH_PORTION)
+	{
+		switch(A_u8PortID)
+		{
+		case GPIO_PORTA:
+			GPIOA->MODER &= ~(0xFFFF<<0x10);
+			GPIOA->MODER |= (A_u16Mode<<0x10);
+			break;
+		case GPIO_PORTB:
+			GPIOB->MODER &= ~(0xFFFF<<0x10);
+			GPIOB->MODER |= (A_u16Mode<<0x10);
+			break;
+		case GPIO_PORTC:
+			GPIOC->MODER &= ~(0xFFFF<<0x10);
+			GPIOC->MODER |= (A_u16Mode<<0x10);
+			break;
+		}
+	}
+
+}
+void MGPIO_vSetPortOutput_t(u8 A_u8PortID,u16 A_u16OutputType)
+{
+	switch(A_u8PortID)
+	{
+	case GPIO_PORTA:
+		GPIOA->OTYPER &= ~(0xFFFF);
+		GPIOA->OTYPER |= A_u16OutputType;
+		break;
+	case GPIO_PORTB:
+		GPIOB->OTYPER &= ~(0xFFFF);
+		GPIOB->OTYPER |= A_u16OutputType;
+		break;
+	case GPIO_PORTC:
+		GPIOC->OTYPER &= ~(0xFFFF);
+		GPIOC->OTYPER |= A_u16OutputType;
+		break;
+	}
+
+}
+void MGPIO_vSetPortOutputSpeed(u8 A_u8PortID,u16 A_u16OutputSpeed,u8 A_u8PortPortion)
+{
+	if(A_u8PortPortion == GPIO_LOW_PORTION)
+		{
+			switch(A_u8PortID)
+			{
+			case GPIO_PORTA:
+				GPIOA->OSPEEDR &= ~(0xFFFF);
+				GPIOA->OSPEEDR |= A_u16OutputSpeed;
+				break;
+			case GPIO_PORTB:
+				GPIOB->OSPEEDR &= ~(0xFFFF);
+				GPIOB->OSPEEDR |= A_u16OutputSpeed;
+				break;
+			case GPIO_PORTC:
+				GPIOC->OSPEEDR &= ~(0xFFFF);
+				GPIOC->OSPEEDR |= A_u16OutputSpeed;
+				break;
+			}
+		}else if(A_u8PortPortion == GPIO_HIGH_PORTION)
+		{
+			switch(A_u8PortID)
+			{
+			case GPIO_PORTA:
+				GPIOA->OSPEEDR &= ~(0xFFFF<<0x10);
+				GPIOA->OSPEEDR |= (A_u16OutputSpeed<<0x10);
+				break;
+			case GPIO_PORTB:
+				GPIOB->OSPEEDR &= ~(0xFFFF<<0x10);
+				GPIOB->OSPEEDR |= (A_u16OutputSpeed<<0x10);
+				break;
+			case GPIO_PORTC:
+				GPIOC->OSPEEDR &= ~(0xFFFF<<0x10);
+				GPIOC->OSPEEDR |= (A_u16OutputSpeed<<0x10);
+				break;
+			}
+		}
+
+}
+void MGPIO_vSetPortVal(u8 A_u8PortID,u8 A_u8PortVal,u8 A_u8PortPortion)
+{
+	if(A_u8PortPortion == GPIO_LOW_PORTION)
+	{
+		switch(A_u8PortID)
+		{
+		case GPIO_PORTA:
+			GPIOA->ODR &= ~(0xFF);
+			GPIOA->ODR |= A_u8PortVal;
+			break;
+		case GPIO_PORTB:
+			GPIOB->ODR &= ~(0xFF);
+			GPIOB->ODR |= A_u8PortVal;
+			break;
+		case GPIO_PORTC:
+			GPIOC->ODR &= ~(0xFF);
+			GPIOC->ODR |= A_u8PortVal;
+			break;
+		}
+	}else if(A_u8PortPortion == GPIO_HIGH_PORTION)
+	{
+		switch(A_u8PortID)
+		{
+		case GPIO_PORTA:
+			GPIOA->ODR &= ~(0xFF<<8);
+			GPIOA->ODR |= (A_u8PortVal<<8);
+			break;
+		case GPIO_PORTB:
+			GPIOB->ODR &= ~(0xFF<<8);
+			GPIOB->ODR |= (A_u8PortVal<<8);
+			break;
+		case GPIO_PORTC:
+			GPIOC->ODR &= ~(0xFF<<8);
+			GPIOC->ODR |= (A_u8PortVal<<8);
+			break;
+		}
+	}
+}
 void MGPIO_vAltFunc(u8 A_u8PortID, u8 A_u8PinNo, u8 A_u8AltFunc)
 {
 
 }
 
+void MGPIO_vInit(MGPIO_Config_t* A_xPinConfig)
+{
+	MGPIO_vSetPinMode(A_xPinConfig->Port,A_xPinConfig->Pin,A_xPinConfig->Mode);
+	MGPIO_vSetPinOutput_t(A_xPinConfig->Port,A_xPinConfig->Pin,A_xPinConfig->OutputType);
+}
 
 
