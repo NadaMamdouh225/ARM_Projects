@@ -10,6 +10,6 @@
 
 
 void HDELAY_vBusyWait_ms(u32 A_u32Time_ms);
-
+void HDELAY_vBusyWait_us(u32 A_u32Time_us);
 
 #endif /* HAL_DELAY_DELAY_INT_H_ */
