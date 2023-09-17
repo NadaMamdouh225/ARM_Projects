@@ -38,6 +38,9 @@ void MSTK_vInit(void)
 
 void MSTK_vStartTimer(u32 A_u32LoadValue)
 {
+	/* Load timer with value */
+	STK->LOAD = A_u32LoadValue;
+	/* Start Timer */
 	SET_BIT(STK->CTRL, CTRL_ENABLE);
 }
 void MSTK_vStopTimer(void)
@@ -55,10 +58,7 @@ void MSTK_vSetDelay(u32 A_u32Ticks)
 
 	if((A_u32Ticks >= 0x00000001 )&& (A_u32Ticks < 0x00FFFFFF) )
 	{
-		/* Load timer with value */
-		STK->LOAD = A_u32Ticks;
-
-		/* Start timer  */
+		/* Load timer with value and start timer */
 		MSTK_vStartTimer(A_u32Ticks);
 
 		/* Wait for the timer flag */
@@ -75,21 +75,20 @@ void MSTK_vSetDelay(u32 A_u32Ticks)
 void MSTK_vSetInterval_singls(u32 A_u32Ticks, void (*CallbackFunction)(void))
 {
 	G_u8SingleFlag = 1;
+	A_u32Ticks *=4000;
+
 	/* Set callback function */
 	Global_Fptr = CallbackFunction;
 
 	/* Reset timer value */
-		STK->VAL = 0;
+	STK->VAL = 0;
 
-		if((A_u32Ticks >= 0x00000001 )&& (A_u32Ticks < 0x00FFFFFF) )
-		{
-			/* Load timer with value */
-			STK->LOAD = A_u32Ticks;
+	if((A_u32Ticks >= 0x00000001 )&& (A_u32Ticks < 0x00FFFFFF) )
+	{
+		/* Load timer with value and start timer */
+		MSTK_vStartTimer(A_u32Ticks);
 
-			/* Start timer  */
-			MSTK_vStartTimer(A_u32Ticks);
-
-		}
+	}
 
 }
 /*description: set timer for a number of ticks using interrupt for number of times until timer is stopped
@@ -98,21 +97,19 @@ void MSTK_vSetInterval_singls(u32 A_u32Ticks, void (*CallbackFunction)(void))
 void MSTK_vSetInterval_Periodic(u32 A_u32Ticks, void (*CallbackFunction)(void))
 {
 	G_u8SingleFlag = 0;
+	A_u32Ticks *=4000;
 	/* Set callback function */
-		Global_Fptr = CallbackFunction;
+	Global_Fptr = CallbackFunction;
 
 	/* Reset timer value */
-			STK->VAL = 0;
+	STK->VAL = 0;
 
-			if((A_u32Ticks >= 0x00000001 )&& (A_u32Ticks < 0x00FFFFFF) )
-			{
-				/* Load timer with value */
-				STK->LOAD = A_u32Ticks;
+	if((A_u32Ticks >= 0x00000001 )&& (A_u32Ticks < 0x00FFFFFF) )
+	{
+		/* Load timer with value and start timer */
+		MSTK_vStartTimer(A_u32Ticks);
 
-				/* Start timer  */
-				MSTK_vStartTimer(A_u32Ticks);
-
-			}
+	}
 }
 u32 MSTK_u32GetElapsedTime(void)
 {
@@ -132,6 +129,7 @@ void SysTick_Handler (void)
 	if(G_u8SingleFlag)
 	{
 		G_u8SingleFlag = 0;
+
 		/* Stop timer */
 		MSTK_vStopTimer();
 	}

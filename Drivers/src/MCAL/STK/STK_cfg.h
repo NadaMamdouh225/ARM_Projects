@@ -16,7 +16,7 @@
  *  STK_AHB_DIV_8
  * */
 
-#define STK_INTERRUPT_EN             INT_DISABLE
+#define STK_INTERRUPT_EN             INT_ENABLE
 /* ------- INTERRUPT CONTROL -------
  * options:
  * INT_ENABLE
